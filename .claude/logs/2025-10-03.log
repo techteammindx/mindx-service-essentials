@@ -1,0 +1,2 @@
+2025-10-03 00:54:23 session=f59e3b62-9481-4d09-b6fa-c66ce647bb95 tool=mcp__kb__kb-read-node input={"path":"/"} input_chars=12 response=[{"type":"text","text":"Failed to read node at path \"/\": Error calli...storContextDepth\":3}}}}"}] response_chars=1.0k
+2025-10-03 01:12:35 session=f59e3b62-9481-4d09-b6fa-c66ce647bb95 tool=mcp__kb__kb-read-node input={"path":"/"} input_chars=12 response=[{"type":"text","text":"{\n  \"node\": {\n    \"id\": \"root-node-0000...\n      }\n    ]\n  }\n}"}] response_chars=1.1k

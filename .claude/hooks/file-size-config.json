@@ -1,0 +1,20 @@
+{
+  "patterns": [
+    {
+      "glob": "**/*.{spec,test}.{ts,tsx}",
+      "threshold": 500,
+      "description": "Test files"
+    },
+    {
+      "glob": "**/{__test__,__tests__,test,tests}/**/*.{ts,tsx}",
+      "threshold": 500,
+      "description": "Test directories"
+    },
+    {
+      "glob": "**/*.{ts,tsx}",
+      "threshold": 300,
+      "description": "Default TypeScript files"
+    }
+  ],
+  "defaultThreshold": 500
+}
