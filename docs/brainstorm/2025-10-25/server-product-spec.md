@@ -26,7 +26,7 @@
   - GraphQL resolvers defined with code-first decorators to reuse DTOs (`@Resolver`, `@Mutation`).
   - gRPC service definitions generated from proto files, registered with `ClientsModule.register` using Nest microservice transport.
 - **Infrastructure adapters:** Repositories, Kafka publishers, persistence mappers isolated under `/src/infrastructure` to keep replacement friction low.
-- **Configuration:** Use `@nestjs/config` with environment validation, splitting env files per docker-compose profile. MongoDB and PostgreSQL both run in compose; repository adapters choose which one to use based on implementation need.
+- **Configuration:** Use `@nestjs/config` with environment validation, splitting env files per docker-compose profile, and load a `PERSISTENCE_DRIVER` flag (`mongo` default, `postgres` optional) from `.env.compose` so only one database adapter boots per instance.
 
 ## Transport Strategy
 - **HTTP layer:** Choose Fastify adapter for better throughput; Nest provides Mercurius driver to mount GraphQL alongside REST (NestJS GraphQL quick start).
@@ -78,18 +78,20 @@
    - Depends on: Zookeeper (service_healthy)
    - Health check: kafka-topics list command
 
-4. **PostgreSQL 17** (`mindx_service_essentials_postgres`)
+4. **Network:** `mindx_service_essentials` (bridge driver)
+
+5. **PostgreSQL 17 (Optional)** (`mindx_service_essentials_postgres`)
    - Port: 5432
    - Health check: pg_isready probe with 10s interval
    - Environment: User/password, database name
-
-5. **Network:** `mindx_service_essentials` (bridge driver)
+   - Only active when `PERSISTENCE_DRIVER=postgres` in application configuration
 
 **Environment Configuration:**
-- `.env.compose` - Mongo/Postgres URIs, Kafka brokers (kafka:29092), consumer group ID, topic naming
+- `.env.compose` - Mongo/Postgres URIs, persistence driver toggle, Kafka brokers (kafka:29092), consumer group ID, topic naming
   ```
   MONGO_URI=mongodb://root:root@mongo:27017/mindx_service_essentials?authSource=admin
   POSTGRES_URI=postgresql://postgres:postgres@postgres:5432/mindx_service_essentials
+  PERSISTENCE_DRIVER=mongo
   KAFKA_BROKERS=kafka:29092
   KAFKA_CONSUMER_GROUP_ID=crm-app
   KAFKA_TOPIC_QUOTE_TOTALS_RECALCULATED=crm.quote.totals.recalculated.v1

@@ -1,7 +1,7 @@
 # Add PostgreSQL Infrastructure Implementation - 2025-10-25
 
 ## Summary
-Successfully implemented PostgreSQL support in the mindx-service-essentials infrastructure layer. All acceptance criteria from the brief met.
+Successfully implemented PostgreSQL support in the mindx-service-essentials infrastructure layer alongside MongoDB. Both databases run in docker-compose; application selects one via `PERSISTENCE_DRIVER` flag for single-instance operation. All acceptance criteria from the brief met.
 
 ## Completed Tasks
 
@@ -38,13 +38,13 @@ Successfully implemented PostgreSQL support in the mindx-service-essentials infr
 - **Acceptance**: psql command reports zero user tables for both stores
 
 ### 6. ✅ Remove dead persistence toggles or docs referencing PERSISTENCE_DRIVER
-- Verified no code references to PERSISTENCE_DRIVER exist
+- Verified no dead/stale PERSISTENCE_DRIVER references exist in code (no legacy code using removed flag)
+- Added `PERSISTENCE_DRIVER=mongo` to `.env.compose` with clear selection comment
 - Updated `docs/brainstorm/2025-10-25/server-product-spec.md`:
-  - Removed PERSISTENCE_DRIVER configuration description
-  - Added PostgreSQL to service list (item 4)
-  - Removed "optional swap" language
-  - Updated env example to remove PERSISTENCE_DRIVER toggle
-- **Acceptance**: Repository contains no stale PERSISTENCE_DRIVER references; docs align with dual-database setup
+  - Restored PERSISTENCE_DRIVER configuration description (line 29)
+  - Listed PostgreSQL as optional service (item 5) with note about driver activation
+  - Restored env example with PERSISTENCE_DRIVER toggle
+- **Acceptance**: Both databases run in compose; application uses `PERSISTENCE_DRIVER` flag to select which adapter boots per instance
 
 ## Validation Results
 
@@ -92,10 +92,14 @@ Successfully implemented PostgreSQL support in the mindx-service-essentials infr
 ## Implementation Notes
 
 - No breaking changes to existing infrastructure or scripts
-- Postgres runs alongside MongoDB; both always-on in compose
+- **Dual-database compose setup:** Both MongoDB and PostgreSQL run in docker-compose
+- **Single-driver application:** Application selects which DB to connect to via `PERSISTENCE_DRIVER` flag
+  - `PERSISTENCE_DRIVER=mongo` → uses MongoDB adapter
+  - `PERSISTENCE_DRIVER=postgres` → uses PostgreSQL adapter
 - All container names follow mindx_service_essentials_* convention
 - Ephemeral setup: no persistent volumes, data lost on teardown
 - Port mapping: 5432 (Postgres), 27017 (Mongo), 2181 (Zookeeper), 9092 (Kafka)
+- Both databases always start in compose; app chooses which one to use via config flag
 
 ## Test Execution
 ```bash
