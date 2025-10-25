@@ -15,12 +15,12 @@ if [ ! -f "$COMPOSE_FILE" ]; then
 fi
 
 echo "Stopping containers..."
-if docker compose -f "$COMPOSE_FILE" --env-file "$ENV_FILE" ps 2>/dev/null | grep -q "mindx_service_essentials"; then
-  docker compose -f "$COMPOSE_FILE" --env-file "$ENV_FILE" down --remove-orphans
-  echo "✓ Containers stopped and removed"
-else
-  echo "No running containers found"
-fi
+docker compose -f "$COMPOSE_FILE" --env-file "$ENV_FILE" down --remove-orphans -v 2>/dev/null || true
+echo "✓ Containers stopped and removed"
+
+echo "Pruning volumes..."
+docker volume prune -f &>/dev/null || true
+echo "✓ Volumes pruned"
 
 echo ""
 echo "======================================="

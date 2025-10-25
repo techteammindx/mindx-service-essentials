@@ -59,6 +59,24 @@ services:
       mongo:
         condition: service_healthy
 
+  postgres:
+    image: postgres:17-alpine
+    container_name: mindx_service_essentials_postgres
+    ports:
+      - "5432:5432"
+    environment:
+      POSTGRES_USER: ${POSTGRES_USER:-postgres}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-postgres}
+      POSTGRES_DB: ${POSTGRES_DB:-mindx_service_essentials}
+    networks:
+      - mindx_service_essentials
+    healthcheck:
+      test: [ "CMD", "pg_isready", "-U", "${POSTGRES_USER:-postgres}" ]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+      start_period: 10s
+
 networks:
   mindx_service_essentials:
     driver: bridge

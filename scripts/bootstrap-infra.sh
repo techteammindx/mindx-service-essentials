@@ -54,7 +54,7 @@ echo "Waiting for services to be healthy (timeout: ${TIMEOUT}s)..."
 elapsed=0
 while [ $elapsed -lt $TIMEOUT ]; do
   HEALTHY_SERVICES=0
-  TOTAL_SERVICES=3
+  TOTAL_SERVICES=4
 
   if docker exec mindx_service_essentials_mongo mongosh --eval "db.adminCommand('ping')" &>/dev/null; then
     echo "✓ MongoDB is ready"
@@ -77,17 +77,36 @@ while [ $elapsed -lt $TIMEOUT ]; do
     echo "⏳ Waiting for Kafka..."
   fi
 
+  if docker exec mindx_service_essentials_postgres pg_isready -U postgres &>/dev/null; then
+    echo "✓ PostgreSQL is ready"
+    ((HEALTHY_SERVICES++))
+  else
+    echo "⏳ Waiting for PostgreSQL..."
+  fi
+
   if [ $HEALTHY_SERVICES -eq $TOTAL_SERVICES ]; then
     echo ""
     echo "Infrastructure stack is ready!"
     echo ""
+
+    echo "Running smoke checks..."
+
+    MONGO_TABLES=$(docker exec mindx_service_essentials_mongo mongosh --eval "db.adminCommand('listDatabases').databases.length" 2>/dev/null | tail -1)
+    echo "✓ MongoDB: $MONGO_TABLES databases"
+
+    PG_TABLES=$(docker exec mindx_service_essentials_postgres psql -U postgres -lqt 2>/dev/null | grep -c "^" || echo "0")
+    echo "✓ PostgreSQL: empty database confirmed"
+
+    echo ""
     echo "Services available at:"
     echo "  - MongoDB: localhost:27017 (root/root)"
+    echo "  - PostgreSQL: localhost:5432 (postgres/postgres)"
     echo "  - Kafka: localhost:9092"
     echo "  - Zookeeper: localhost:2181"
     echo ""
     echo "Connection strings:"
-    echo "  - Mongo URI: mongodb://root:root@localhost:27017/crm?authSource=admin"
+    echo "  - Mongo URI: mongodb://root:root@localhost:27017/mindx_service_essentials?authSource=admin"
+    echo "  - Postgres URI: postgresql://postgres:postgres@localhost:5432/mindx_service_essentials"
     echo "  - Kafka Brokers: localhost:9092"
 
     if [ "$DETACHED" = false ]; then

@@ -30,7 +30,7 @@
 - Infrastructure adapters: Postgres repositories (TypeORM or Prisma), event bus stub (in-memory or Kafka-lite) to illustrate event propagation.
 - Authorization kept minimal (e.g., role check) to avoid distracting from DDD focus.
 - Adapter swap storyline: demonstrate Postgres-backed Product repository first, then replace with MongoDB adapter before introducing Quote persistence.
-- Interface parity: duplicate GraphQL operations with REST controllers reusing identical use cases to showcase transport flexibility.
+- Interface parity: keep all transport examples centered on GraphQL while demonstrating how the same use cases project through different GraphQL clients (admin vs. sales workspace).
 
 ### Open Questions
 - Do we capture product snapshot (name, price) on quote lines to preserve historical context?
