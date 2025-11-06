@@ -1,0 +1,19 @@
+syntax = "proto3";
+
+package PingCounterGrpc;
+
+message PingCounterGrpcGetRequest {}
+message PingCounterGrpcPingRequest {}
+
+service PingCounterGrpcService {
+  rpc get (PingCounterGrpcGetRequest) returns (PingCounterGrpcPayload) {}
+  rpc ping (PingCounterGrpcPingRequest) returns (PingCounterGrpcPayload) {}
+}
+
+message PingCounterGrpcPayload {
+  string id = 1;
+  int32 count = 2;
+  int32 lastPingedAt = 3;
+  int32 createdAt = 4;
+}
+

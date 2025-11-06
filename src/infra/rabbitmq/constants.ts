@@ -1,0 +1,4 @@
+export const RABBITMQ_CLIENT_MODULE_NAME = 'RBBITMQ_CLIENT';
+
+export const RABBITMQ_MESSAGE_PATTERN_PING_COUNTER = 'ping_counter';
+

@@ -1,0 +1,2 @@
+export const KAFKA_CLIENT_MODULE_NAME = 'KAFKA';
+

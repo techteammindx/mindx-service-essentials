@@ -54,7 +54,7 @@ echo "Waiting for services to be healthy (timeout: ${TIMEOUT}s)..."
 elapsed=0
 while [ $elapsed -lt $TIMEOUT ]; do
   HEALTHY_SERVICES=0
-  TOTAL_SERVICES=4
+  TOTAL_SERVICES=5
 
   if docker exec mindx_service_essentials_mongo mongosh --eval "db.adminCommand('ping')" &>/dev/null; then
     echo "✓ MongoDB is ready"
@@ -84,6 +84,13 @@ while [ $elapsed -lt $TIMEOUT ]; do
     echo "⏳ Waiting for PostgreSQL..."
   fi
 
+  if docker exec mindx_service_essentials_rabbitmq rabbitmq-diagnostics check_running &>/dev/null; then
+    echo "✓ RabbitMQ is ready"
+    ((HEALTHY_SERVICES++))
+  else
+    echo "⏳ Waiting for RabbitMQ..."
+  fi
+
   if [ $HEALTHY_SERVICES -eq $TOTAL_SERVICES ]; then
     echo ""
     echo "Infrastructure stack is ready!"
@@ -103,11 +110,13 @@ while [ $elapsed -lt $TIMEOUT ]; do
     echo "  - PostgreSQL: localhost:5432 (postgres/postgres)"
     echo "  - Kafka: localhost:9092"
     echo "  - Zookeeper: localhost:2181"
+    echo "  - RabbitMQ: localhost:5672 (guest/guest), UI http://localhost:15672"
     echo ""
     echo "Connection strings:"
     echo "  - Mongo URI: mongodb://root:root@localhost:27017/mindx_service_essentials?authSource=admin"
     echo "  - Postgres URI: postgresql://postgres:postgres@localhost:5432/mindx_service_essentials"
     echo "  - Kafka Brokers: localhost:9092"
+    echo "  - RabbitMQ URL: amqp://guest:guest@localhost:5672"
 
     if [ "$DETACHED" = false ]; then
       wait $COMPOSE_PID

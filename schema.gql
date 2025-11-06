@@ -1,0 +1,33 @@
+# ------------------------------------------------------
+# THIS FILE WAS AUTOMATICALLY GENERATED (DO NOT MODIFY)
+# ------------------------------------------------------
+
+type Mutation {
+  ping: PingCounterGraphQL!
+}
+
+type PingCounterGraphQL {
+  count: Float!
+  createdAt: Float!
+  id: String!
+  lastPingedAt: Float!
+}
+
+type PingStatsGraphQL {
+  id: String!
+  seconds: Float!
+  value: Float!
+}
+
+input PingStatsGraphQLQueryInput {
+  timeFrame: String!
+}
+
+type PingStatsGraphQLQueryResult {
+  items: [PingStatsGraphQL!]!
+}
+
+type Query {
+  get: PingCounterGraphQL!
+  getPingStats(input: PingStatsGraphQLQueryInput!): PingStatsGraphQLQueryResult!
+}
