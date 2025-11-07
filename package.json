@@ -15,7 +15,8 @@
     "test:watch": "vitest --watch",
     "test:cov": "vitest --coverage",
     "typecheck": "tsc --noEmit",
-    "generate:grpc-contract": "./generate_ts_contract_from_proto.sh"
+    "generate:grpc-contract": "./generate_ts_contract_from_proto.sh",
+    "grpcui": "./start_grpcui.sh"
   },
   "dependencies": {
     "@apollo/server": "5.0.0",
