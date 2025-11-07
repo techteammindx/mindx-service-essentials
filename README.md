@@ -112,37 +112,72 @@ Each folder carries both `ping-counter` and `ping-stats` slices to keep the full
 
 ## GraphQL API
 
-Available at `http://localhost:5555/graphql` when `TRANSPORT_PROTOCOLS` includes `GRAPHQL`.
-
-### Mutations
+Available at `http://localhost:5555/graphql` when `TRANSPORT_PROTOCOLS` includes `GRAPHQL`. The schema is generated at runtime from the transports:
 
 ```graphql
+type Query {
+  get: PingCounter!
+  getPingStats(input: PingStatsQueryInput!): PingStatsQueryResult!
+}
+
+type Mutation {
+  ping: PingCounter!
+}
+
+type PingCounter {
+  id: ID!
+  count: Int!
+  lastPingedAt: Float!
+  createdAt: Float!
+}
+
+input PingStatsQueryInput {
+  timeFrame: PingStatsQueryTimeFrame!
+}
+
+type PingStatsQueryResult {
+  items: [PingStats!]!
+}
+
+type PingStats {
+  id: ID!
+  value: Int!
+  seconds: Int!
+}
+
+enum PingStatsQueryTimeFrame {
+  Last5Minute
+  LastHour
+}
+```
+
+### Sample operations
+
+```graphql
+# Increment the counter and read the latest values
 mutation {
-  incrementPingCounter(input: { id: "counter-1" }) {
+  ping {
     id
     count
     lastPingedAt
     createdAt
   }
 }
-```
 
-### Queries
-
-```graphql
+# Query the latest counter plus stats projections for the last 5 minutes
 query {
-  getPingCounter(input: { id: "counter-1" }) {
+  get {
     id
     count
     lastPingedAt
     createdAt
   }
-
-  getAllPingCounters {
-    id
-    count
-    lastPingedAt
-    createdAt
+  getPingStats(input: { timeFrame: Last5Minute }) {
+    items {
+      id
+      seconds
+      value
+    }
   }
 }
 ```
@@ -159,18 +194,3 @@ pnpm test:watch
 # Coverage
 pnpm test:cov
 ```
-
-## Implementation Highlights
-
-✅ **Persistence Flexibility**: Switch between MongoDB and PostgreSQL via environment flag
-✅ **Transport Agnostic**: GraphQL, gRPC, Kafka, and RabbitMQ expose identical business logic
-✅ **Event-Driven**: Kafka/RabbitMQ integration keeps ping-stats projections in sync
-✅ **Type-Safe**: TypeScript with strict null checks throughout
-✅ **Well-Tested**: Unit tests for aggregates, services, and adapters
-✅ **Dockerized**: Single compose file orchestrates all services
-
-## References
-
-- [Brief Documentation](docs/briefs/000-current/ping-service-brief.md)
-- [Implementation Notes](docs/notes/2025-10-26/ping-service-implementation.md)
-- [Tech Stack](docs/brainstorm/2025-10-25/server-tech-stack.md)
