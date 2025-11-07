@@ -66,16 +66,16 @@ Set these variables (or export them inline) before running `pnpm start:*` comman
 
 ## Architecture
 
-### Domain-Driven Design (DDD)
-- **Aggregates**: `PingCounter` with invariant validation
-- **Domain Events**: `PingEvent` ensures count increment integrity
-- **Value Objects**: Embedded in aggregates
+### Domain-Driven Design
+- `src/domain/**` holds the ubiquitous language: `PingCounter` aggregate + incremented domain event, and the `PingStats` projection service. These modules contain all invariants, value objects, and business rules with zero NestJS imports.
+- Application services in `src/app/**` coordinate the aggregates through ports declared under `src/contract/app/**`. `PingCounterDomainApp` mutates state and emits events, while `PingCounterAPILayerApp` exposes a read-only view; `PingStatsDomainApp` maps transport DTOs into query ranges and save commands.
+- Vertical slices keep the domain visible end to end. Every slice (ping-counter, ping-stats) carries its own domain, app, container, infra, and transport pieces so learners can trace request → domain → persistence within a single folder chain.
 
-### Hexagonal Architecture
-- **Domain Core**: Business logic isolated from frameworks
-- **Application Layer**: Use cases and ports (interfaces)
-- **Infrastructure**: Adapters for Mongo, Postgres, Kafka
-- **Interface**: GraphQL resolvers and gRPC controllers
+### Hexagonal layering
+- Ports: contracts inside `src/contract/**` define repositories, event publishers, domain services, DTOs, and DI tokens. Application services depend on these abstractions only.
+- Adapters: infrastructure-specific implementations live in `src/data-source/**` (Mongo repositories, Kafka/RabbitMQ publishers, gRPC domain clients) and `src/transport/**` (GraphQL resolvers, gRPC controllers, Kafka consumers). They translate external protocols into domain commands/events.
+- Containers (`src/container/**`) wire the adapters to their ports, building each slice’s hexagon. `AppModule` registers whichever driver modules (`MongoModule`, `KafkaClientModule`, `GrpcClientModule`, etc.) match `DATA_SOURCE_DRIVERS`.
+- Bootstrap (`src/main.ts`) inspects `TRANSPORT_PROTOCOLS` at runtime and spins up the GraphQL (5555), gRPC (7777), Kafka, and/or RabbitMQ servers, demonstrating how ports/adapters remain swappable without touching the core domain.
 
 ### Project Structure
 
