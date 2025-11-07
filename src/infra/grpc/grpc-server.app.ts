@@ -1,9 +1,10 @@
 import { join } from 'path';
 
+import { ReflectionService } from '@grpc/reflection';
+
 import { Type } from '@nestjs/common';
 import { NestFactory } from '@nestjs/core';
 import { MicroserviceOptions, Transport } from '@nestjs/microservices';
-
 import { PING_COUNTER_GRPC_PACKAGE_NAME } from '@contract/infra/ping-counter.grpc.infra.contract';
 
 export async function setupGrpcServerApp(InputModule: Type<any>) {
@@ -24,9 +25,14 @@ export async function setupGrpcServerApp(InputModule: Type<any>) {
           defaults: true,
           oneofs: true,
         },
+        onLoadPackageDefinition: (packageDefinition, grpcServer) => {
+          const reflection = new ReflectionService(packageDefinition);
+          reflection.addToServer(grpcServer);
+        }
       },
     },
   );
+
   return app;
 }
 
