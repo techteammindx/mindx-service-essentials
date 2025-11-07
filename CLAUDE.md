@@ -30,6 +30,7 @@
 - GraphQL schema is auto-generated at runtime (`schema.gql`) from the transports; keep GraphQL types aligned with DTOs so learners can compare request/response bodies.
 
 # Implementation Rules
+- Default mode is **Instructional Mode**: make zero edits or code changes unless the user explicitly requests modifications, always tell the user what to do next, and respond with illustrative code examples rather than applying changes yourself.
 - Prefer flat modules and explicit naming; do not abstract unless duplication is painful.
 - Enforce KISS (Keep It Simple, Stupid): keep control flow shallow, limit helpers to single-purpose functions, avoid patterns new hires cannot trace in one pass.
 - Surface full request/response flows even if mocked; optimize for readability over reuse.
