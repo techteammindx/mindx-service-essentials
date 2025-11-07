@@ -6,8 +6,8 @@ Educational backend service teaching domain-driven design, hexagonal architectur
 
 ### Prerequisites
 - Docker & Docker Compose
-- pnpm (or npm/yarn)
-- Node.js 20+
+- pnpm (10.x per Volta pin)
+- Node.js 22+
 
 ### Local Development
 
@@ -15,13 +15,17 @@ Educational backend service teaching domain-driven design, hexagonal architectur
 # Install dependencies
 pnpm install
 
-# Start infrastructure (Mongo, Postgres, Kafka)
-docker compose up mongo postgres kafka zookeeper
+# Optionally create a local overrides file (env vars are read via process.env)
+cp .env.example .env.local
 
-# Run development server (GraphQL mode)
-pnpm start:dev
+# Start local infrastructure (Mongo, Postgres, Kafka, RabbitMQ)
+docker compose up mongo postgres kafka zookeeper rabbitmq
 
-# GraphQL endpoint: http://localhost:3000/graphql
+# Run the Nest dev server with the transports/data sources you need
+TRANSPORT_PROTOCOLS=GRAPHQL,KAFKA DATA_SOURCE_DRIVERS=MONGO,KAFKA pnpm start:dev
+
+# GraphQL endpoint: http://localhost:5555/graphql
+# gRPC endpoint: 0.0.0.0:7777 (enabled when GRPC is in TRANSPORT_PROTOCOLS)
 ```
 
 ### Docker Compose (All Services)
@@ -30,19 +34,35 @@ pnpm start:dev
 # Build and start all services
 docker compose up
 
-# GraphQL: http://localhost:3000/graphql
-# gRPC: localhost:5000
+# GraphQL: http://localhost:5555/graphql
+# gRPC: 0.0.0.0:7777
 ```
 
 ### Configuration
 
 Environment variables in `.env.compose`:
 
-| Variable | Values | Default |
+| Variable | Description | Example |
 | --- | --- | --- |
-| `PERSISTENCE_DRIVER` | `mongo` \| `postgres` | `mongo` |
-| `TRANSPORT_MODE` | `graphql` \| `grpc` | `graphql` |
-| `KAFKA_BROKERS` | Broker list | `kafka:29092` |
+| `TRANSPORT_PROTOCOLS` | Comma-separated transports to bootstrap (`GRAPHQL`, `GRPC`, `KAFKA`, `RABBITMQ`). | `GRAPHQL,KAFKA` |
+| `DATA_SOURCE_DRIVERS` | Comma-separated adapters to register (`MONGO`, `POSTGRES`, `KAFKA`, `GRPC`). | `MONGO,KAFKA` |
+| `MONGO_URI` | Mongo connection string consumed by `MongoModule`. | `mongodb://root:root@mongo:27017/mindx_service_essentials?authSource=admin` |
+| `POSTGRES_URI` | Optional Postgres connection string when enabling that driver. | `postgresql://postgres:postgres@postgres:5432/mindx_service_essentials` |
+| `KAFKA_BROKERS` | Comma-separated `host:port` list shared by producer + consumer. | `kafka:29092` |
+| `KAFKA_CONSUMER_GROUP_ID` | Group id for Kafka consumers (ping-stats + future slices). | `ping-service` |
+| `GRPC_SERVICE_URL` | Address of the ping-counter gRPC domain service client. | `0.0.0.0:7777` |
+| `RABBITMQ_URL` | Connection string used by RabbitMQ transports. | `amqp://guest:guest@rabbitmq:5672` |
+| `RABBITMQ_QUEUE_NAME` | Queue name shared by RabbitMQ publishers/consumers. | `mindx_service_essentials` |
+| `NODE_ENV` | Standard Node environment flag. | `development` |
+
+Set these variables (or export them inline) before running `pnpm start:*` commands so the correct transports and data sources initialize.
+
+#### Toggling transports & drivers
+
+- Enable transports by listing them in `TRANSPORT_PROTOCOLS` (any mix of `GRAPHQL`, `GRPC`, `KAFKA`, `RABBITMQ`). The server only boots the transports you list.
+- Register data-source adapters by listing them in `DATA_SOURCE_DRIVERS` (any mix of `MONGO`, `POSTGRES`, `KAFKA`, `GRPC`). `src/app.module.ts` wires the adapters in order so missing drivers cause DI errors.
+- Combine the two lists to stage exercises: e.g., `TRANSPORT_PROTOCOLS=GRAPHQL` / `DATA_SOURCE_DRIVERS=MONGO` for a pure request-response walkthrough, or add `KAFKA` to both lists to demo async propagation into ping-stats.
+- Defaults live in `.env.compose`, while `.env.example` provides the minimal local values to copy when not using Docker.
 
 ## Architecture
 
@@ -61,16 +81,38 @@ Environment variables in `.env.compose`:
 
 ```
 src/
-├── domain/          # Aggregates, domain events, ports
-├── application/     # DTOs, services, application ports
-├── infrastructure/  # Persistence, messaging adapters
-├── interface/       # GraphQL, gRPC, HTTP controllers
-├── config/          # Configuration factories
-├── bootstrap/       # Transport entry points
-└── main.ts          # TRANSPORT_MODE switch
+├── app/            # Slice-level application services + DTO mappers
+├── container/      # Nest modules wiring DI tokens and transports per slice
+├── config/         # zod schemas + runtime config values
+├── contract/       # Shared DI tokens, DTOs, queue payloads, proto metadata
+├── data-source/    # Repositories, event publishers, and domain service adapters
+├── domain/         # Aggregates, value objects, domain services
+├── infra/          # Server bootstrappers (GraphQL/gRPC/Kafka/RabbitMQ, Mongo/Kafka/Grpc clients)
+├── transport/      # GraphQL resolvers, gRPC controllers, Kafka consumers
+├── app.module.ts   # Registers data sources + slice containers
+└── main.ts         # Enables transports based on TRANSPORT_PROTOCOLS
 ```
 
+Each folder carries both `ping-counter` and `ping-stats` slices to keep the full request/response path visible to learners.
+
+## Vertical slice walkthroughs
+
+**Ping Counter (write path)**
+- Hit the GraphQL or gRPC transport to run `PingCounterApp`. The aggregate enforces invariants and emits `PingCounterIncrementedEvent`.
+- Data-source drivers persist the latest counter (Mongo/Postgres) and publish the incremented event via Kafka or RabbitMQ when those drivers are enabled.
+
+**Ping Stats (read path)**
+- Kafka/RabbitMQ transports consume the `ping_counter.incremented` topic/pattern, deserialize the `PingCounterIncrementedEvent`, and call `PingStatsApp`.
+- The stats slice writes the `(seconds, value)` pair so learners can see eventual consistency between the counter and stats projections.
+
+**End-to-end exercise**
+1. Start Docker services plus the Nest dev server with `TRANSPORT_PROTOCOLS=GRAPHQL,KAFKA` and `DATA_SOURCE_DRIVERS=MONGO,KAFKA`.
+2. Run the `incrementPingCounter` mutation. The response shows the updated counter immediately.
+3. Watch the dev server logs for `Received kafka event...` from `ping-stats`. Query Mongo (or expose a resolver) to observe the stats projection catching up.
+
 ## GraphQL API
+
+Available at `http://localhost:5555/graphql` when `TRANSPORT_PROTOCOLS` includes `GRAPHQL`.
 
 ### Mutations
 
@@ -121,8 +163,8 @@ pnpm test:cov
 ## Implementation Highlights
 
 ✅ **Persistence Flexibility**: Switch between MongoDB and PostgreSQL via environment flag
-✅ **Transport Agnostic**: GraphQL and gRPC expose identical business logic
-✅ **Event-Driven**: Kafka integration for async counter updates
+✅ **Transport Agnostic**: GraphQL, gRPC, Kafka, and RabbitMQ expose identical business logic
+✅ **Event-Driven**: Kafka/RabbitMQ integration keeps ping-stats projections in sync
 ✅ **Type-Safe**: TypeScript with strict null checks throughout
 ✅ **Well-Tested**: Unit tests for aggregates, services, and adapters
 ✅ **Dockerized**: Single compose file orchestrates all services

@@ -4,7 +4,7 @@ import { Resolver, Query, Args } from '@nestjs/graphql';
 
 import { PingStatsApp, PingStatsAppDIToken } from '@contract/app/ping-stats.app.contract';
 
-import { PingStatsGraphQLQueryResult, PingStatsGraphQLQueryInput } from './ping-stats.graphql.types';
+import { PingStatsGraphQLQueryResult, PingStatsGraphQLQueryInput } from './ping-stats.graphql.transport.schema';
 
 @Resolver()
 export class PingStatsGraphQLTransport {

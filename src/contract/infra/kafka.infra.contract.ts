@@ -1,2 +1,8 @@
-export const KAFKA_CLIENT_MODULE_NAME = 'KAFKA';
+export enum KafkaInfraDIToken {
+  ClientModule = 'KAFKA_CLIENT'
+}
+
+export enum PingCounterKafkaTopic {
+  Incremented = 'ping_counter.incremented',
+}
 

@@ -3,7 +3,7 @@ import { PingStatsRepository } from '@domain/ping-stats/ping-stats.repository';
 
 import { PingStatsApp, PingStatsSaveCommand, PingStatsQuery } from '@contract/app/ping-stats.app.contract';
 
-import { PingStatsAppMapper } from './ping-stats.app.mapper';
+import { PingStatsAppMapper } from './ping-stats.domain.app.mapper';
 
 export class PingStatsDomainApp implements PingStatsApp {
   

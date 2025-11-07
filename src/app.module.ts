@@ -2,7 +2,7 @@ import { Module } from '@nestjs/common';
 import { ConfigModule } from '@nestjs/config';
 
 import { config } from '@config/value';
-import { DataSourceProtocol } from '@config/types';
+import { DataSourceDriver } from '@config/types';
 
 import { MongoModule } from '@infra/mongo/mongo.module';
 import { KafkaClientModule } from '@infra/kafka/kafka-client.module';
@@ -12,9 +12,9 @@ import { PingCounterContainerModule } from '@container/ping-counter.container.mo
 import { PingStatsContainerModule } from '@container/ping-stats.container.module';
 
 const dataSourceModules = [
-  ...(config.dataSourceProtocols.includes(DataSourceProtocol.MONGO) ? [MongoModule] : []),
-  ...(config.dataSourceProtocols.includes(DataSourceProtocol.KAFKA) ? [KafkaClientModule] : []),
-  ...(config.dataSourceProtocols.includes(DataSourceProtocol.GRPC) ? [GrpcClientModule] : []),
+  ...(config.dataSourceDrivers.includes(DataSourceDriver.MONGO) ? [MongoModule] : []),
+  ...(config.dataSourceDrivers.includes(DataSourceDriver.KAFKA) ? [KafkaClientModule] : []),
+  ...(config.dataSourceDrivers.includes(DataSourceDriver.GRPC) ? [GrpcClientModule] : []),
 ];
 
 @Module({

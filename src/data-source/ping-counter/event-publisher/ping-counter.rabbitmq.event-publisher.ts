@@ -2,19 +2,21 @@ import { Injectable, Inject } from '@nestjs/common';
 import { ClientProxy } from '@nestjs/microservices';
 
 import { PingCounterEvent } from '@domain/ping-counter/ping-counter.event';
+import { PingCounterIncrementedEvent } from '@domain/ping-counter/ping-counter.incremented.event';
 import { PingCounterEventPublisher } from '@domain/ping-counter/ping-counter.event-publisher';
 
-import { RABBITMQ_CLIENT_MODULE_NAME, RABBITMQ_MESSAGE_PATTERN_PING_COUNTER } from '@infra/rabbitmq/constants';
+import { RabbitMQInfraDIToken, PingCounterRabbitMQMessagePattern } from '@contract/infra/rabbitmq.infra.contract';
 
 @Injectable()
 export class PingCounterRabbitMQEventPublisher implements PingCounterEventPublisher {
   constructor(
-    @Inject(RABBITMQ_CLIENT_MODULE_NAME) private readonly client: ClientProxy,
-  ) {
-  }
+    @Inject(RabbitMQInfraDIToken.ClientModule) private readonly client: ClientProxy,
+  ) {}
 
   public async publish(event: PingCounterEvent): Promise<void> {
-    this.client.emit(RABBITMQ_MESSAGE_PATTERN_PING_COUNTER, event);
+    if (event instanceof PingCounterIncrementedEvent) {
+      this.client.emit(PingCounterRabbitMQMessagePattern.Incremented, event);
+    } 
   }
 }
 

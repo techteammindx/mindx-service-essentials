@@ -5,7 +5,7 @@ export enum TransportProtocol {
   RABBITMQ = 'RABBITMQ',
 };
 
-export enum DataSourceProtocol {
+export enum DataSourceDriver {
   MONGO = 'MONGO',
   POSTGRES = 'POSTGRES',
   KAFKA = 'KAFKA',
@@ -25,11 +25,17 @@ interface GrpcConfig {
   serviceUrl: string;
 }
 
+interface RabbitMQConfig {
+  serverUrl: string;
+  queueName: string;
+}
+
 export interface Config {
   transportProtocols: TransportProtocol[],
-  dataSourceProtocols: DataSourceProtocol[],
+  dataSourceDrivers: DataSourceDriver[],
   mongo: MongoConfig,
   kafka: KafkaConfig,
   grpc: GrpcConfig,
+  rabbitmq: RabbitMQConfig,
 };
 

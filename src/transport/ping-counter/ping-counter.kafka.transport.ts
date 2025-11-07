@@ -5,7 +5,6 @@ import {
 //import { EventPattern } from '@nestjs/microservices'; 
 
 //import { PingCounterApp, PingCounterAppFactory, PingCounterAppDIToken } from '@contract/app/ping-counter.app.contract';
-//import { PingCounterQueueMessage } from '@contract/queue/queue.contract';
 
 @Controller()
 export class PingCounterKafkaTransport {

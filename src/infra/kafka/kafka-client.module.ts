@@ -3,13 +3,13 @@ import { ClientsModule, Transport } from '@nestjs/microservices';
 
 import { config } from '@config/value';
 
-import { KAFKA_CLIENT_MODULE_NAME } from '@contract/infra/kafka.infra.contract';
+import { KafkaInfraDIToken } from '@contract/infra/kafka.infra.contract';
 
 @Global()
 @Module({
   imports: [
     ClientsModule.register([{
-      name: KAFKA_CLIENT_MODULE_NAME,
+      name: KafkaInfraDIToken.ClientModule,
       transport: Transport.KAFKA,
       options: {
         client: {
@@ -19,7 +19,7 @@ import { KAFKA_CLIENT_MODULE_NAME } from '@contract/infra/kafka.infra.contract';
         consumer: {
           groupId: 'mindx-service-essentials'
         }
-      }        
+      }
     }]),
   ],
   exports: [ClientsModule]

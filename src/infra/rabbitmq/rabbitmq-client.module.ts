@@ -1,25 +1,22 @@
 import { Module } from '@nestjs/common';
 import { ClientsModule, Transport } from '@nestjs/microservices';
-import { ConfigModule, ConfigService } from '@nestjs/config';
 
-import { RABBITMQ_CLIENT_MODULE_NAME } from './constants';
+import { config } from '@config/value';
+
+import { RabbitMQInfraDIToken } from '@contract/infra/rabbitmq.infra.contract';
 
 @Module({
   imports: [
-    ClientsModule.registerAsync([{
-      name: RABBITMQ_CLIENT_MODULE_NAME,
-      imports: [ConfigModule],
-      inject: [ConfigService],
-      useFactory: (configService: ConfigService) => ({
-        transport: Transport.RMQ,
-        options: {
-          urls: [configService.get<string>('RABBITMQ_URL') || ''],
-          queue: configService.get<string>('RABBITMQ_QUEUE_NAME') || '',
-          queueOptions: {
-            durable: true,
-          },
+    ClientsModule.register([{
+      name: RabbitMQInfraDIToken.ClientModule,
+      transport: Transport.RMQ,
+      options: {
+        urls: [config.rabbitmq.serverUrl],
+        queue: config.rabbitmq.queueName,
+        queueOptions: {
+          durable: true,
         },
-      }),
+      },
     }]),
   ],
 })

@@ -4,7 +4,7 @@ import { Resolver, Query, Mutation } from '@nestjs/graphql';
 
 import { PingCounterApp, PingCounterAppDIToken } from '@contract/app/ping-counter.app.contract';
 
-import { PingCounterGraphQL } from './ping-counter.graphql.types';
+import { PingCounterGraphQL } from './ping-counter.graphql.transport.schema';
 
 @Resolver()
 export class PingCounterGraphQLTransport {
