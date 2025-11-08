@@ -14,9 +14,10 @@ MindX Engineering
 # Agenda
 
 1. Ground rules
-2. Getting started
-3. Hexagon architecture
-4. DDD (Domain Driven Design)
+2. Pre-work
+3. Target app overview
+4. Hexagon architecture
+5. DDD (Domain Driven Design)
 
 ---
 
@@ -66,3 +67,12 @@ nest new .
 ```
 ---
 
+# Target app overview
+
+<div class="flex items-center justify-center h-full">
+
+![Target app overview](./images/app-overview.svg)
+
+</div>
+
+---
