@@ -1,8 +1,21 @@
 import { Module } from '@nestjs/common';
+import { GraphQLModule } from '@nestjs/graphql';
+import { ApolloDriver, ApolloDriverConfig } from '@nestjs/apollo';
+
+import { PingCounterContainerModule } from '@container/ping-counter.container.module';
 
 @Module({
-  imports: [],
+  imports: [
+    GraphQLModule.forRoot<ApolloDriverConfig>({
+      driver: ApolloDriver,
+      autoSchemaFile: 'schema.gql',
+      playground: false, 
+      graphiql: true,
+    }),
+    PingCounterContainerModule,
+  ],
   controllers: [],
   providers: [],
 })
 export class AppModule {}
+
