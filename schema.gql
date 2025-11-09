@@ -11,3 +11,7 @@ type PingCounterGraphQLDTO {
 type Query {
   get: PingCounterGraphQLDTO!
 }
+
+type Mutation {
+  ping: PingCounterGraphQLDTO!
+}

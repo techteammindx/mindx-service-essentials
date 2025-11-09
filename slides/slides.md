@@ -16,7 +16,7 @@ MindX Engineering
 1. Ground rules
 2. Pre-work
 3. Target app overview
-4. Hexagon architecture
+4. Hexagon architecture overview
 5. DDD (Domain Driven Design)
 
 ---
@@ -76,3 +76,13 @@ nest new .
 </div>
 
 ---
+
+# Hexagon architecture overview
+
+<div class="flex items-center h-full">
+  ![Hexagon architecture overview](./images/hexagon-overview.minimal.svg)
+</div>
+
+---
+
+

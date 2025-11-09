@@ -4,7 +4,7 @@
     "moduleResolution": "nodenext",
     "resolvePackageJsonExports": true,
     "esModuleInterop": true,
-    "isolatedModules": true,
+    "isolatedModules": false,
     "declaration": true,
     "removeComments": true,
     "emitDecoratorMetadata": true,
@@ -23,7 +23,11 @@
     "noFallthroughCasesInSwitch": false,
     "paths": {
       "@transport/*": ["src/transport/*"],
-      "@container/*": ["src/container/*"]
+      "@container/*": ["src/container/*"],
+      "@contract/*": ["src/contract/*"],
+      "@infra/*": ["src/infra/*"],
+      "@app/*": ["src/app/*"],
+      "@data-source/*": ["src/data-source/*"]
     }
   }
 }

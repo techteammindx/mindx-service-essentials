@@ -17,19 +17,23 @@
     "test:watch": "jest --watch",
     "test:cov": "jest --coverage",
     "test:debug": "node --inspect-brk -r tsconfig-paths/register -r ts-node/register node_modules/.bin/jest --runInBand",
-    "test:e2e": "jest --config ./test/jest-e2e.json"
+    "test:e2e": "jest --config ./test/jest-e2e.json",
+    "generate:grpc-contract": "bash ./generate_contract_from_proto.sh"
   },
   "dependencies": {
     "@apollo/server": "^5.1.0",
     "@as-integrations/express5": "^1.1.2",
+    "@grpc/grpc-js": "^1.14.1",
     "@nestjs/apollo": "^13.2.1",
     "@nestjs/common": "^11.0.1",
     "@nestjs/core": "^11.0.1",
     "@nestjs/graphql": "^13.2.0",
+    "@nestjs/microservices": "^11.1.8",
     "@nestjs/platform-express": "^11.0.1",
     "graphql": "^16.12.0",
     "reflect-metadata": "^0.2.2",
-    "rxjs": "^7.8.1"
+    "rxjs": "^7.8.1",
+    "ts-proto": "^2.8.3"
   },
   "devDependencies": {
     "@eslint/eslintrc": "^3.2.0",
