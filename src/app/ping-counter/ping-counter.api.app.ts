@@ -4,7 +4,7 @@ import { PingCounterApp, PingCounterAppDTO } from '@contract/app/ping-counter.ap
 import { PingCounterDomainService, PingCounterDataSourceInjectToken } from '@contract/data-source/ping-counter.data-source.contract';
 
 @Injectable()
-export class PingCounterAPILayerApp implements PingCounterApp {
+export class PingCounterAPIApp implements PingCounterApp {
   
   constructor(
     @Inject(PingCounterDataSourceInjectToken.DomainService) private readonly service: PingCounterDomainService,

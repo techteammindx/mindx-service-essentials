@@ -10,7 +10,7 @@ import { PingCounterGraphQLDTO } from './ping-counter.graphql.schema.transport';
 export class PingCounterGraphQLResolverTransport {
 
   constructor(
-    @Inject(PingCounterAppInjectToken.APILayer) private readonly app: PingCounterApp,
+    @Inject(PingCounterAppInjectToken.API) private readonly app: PingCounterApp,
   ) {}
 
   @Query(() => PingCounterGraphQLDTO)

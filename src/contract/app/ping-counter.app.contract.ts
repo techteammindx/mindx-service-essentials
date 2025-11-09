@@ -10,5 +10,6 @@ export interface PingCounterApp {
 }
 
 export enum PingCounterAppInjectToken {
-  APILayer = 'PING_COUNTER_API_LAYER_APP',
+  API = 'PING_COUNTER_API_LAYER_APP',
+  Domain = 'PING_COUNTER_DOMAIN_APP'
 }

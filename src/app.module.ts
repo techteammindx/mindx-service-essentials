@@ -2,8 +2,8 @@ import { Module } from '@nestjs/common';
 import { GraphQLModule } from '@nestjs/graphql';
 import { ApolloDriver, ApolloDriverConfig } from '@nestjs/apollo';
 
-import { PingCounterContainerModule } from '@container/ping-counter.container.module';
-
+import { PingCounterAPIContainerModule } from '@container/ping-counter.api.container.module';
+import { PingCounterDomainContainerModule } from '@container/ping-counter.domain.container.module';
 import { GrpcClientDataSourceModule } from '@infra/grpc/grpc-client.data-source.module';
 
 @Module({
@@ -15,7 +15,8 @@ import { GrpcClientDataSourceModule } from '@infra/grpc/grpc-client.data-source.
       graphiql: true,
     }),
     GrpcClientDataSourceModule,
-    PingCounterContainerModule,
+    PingCounterAPIContainerModule,
+    PingCounterDomainContainerModule,
   ],
   controllers: [],
   providers: [],
