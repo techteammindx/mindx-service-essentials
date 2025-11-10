@@ -40,7 +40,7 @@ git checkout v0.0.0
 
 ```
 
-2. Prepare Node 22.x
+2. Prepare NodeJS 22.x
 
 ```
 # Install volta
@@ -62,8 +62,8 @@ docker compose up -d
 4. Getting started with NestJS
 
 ```
-pnpm i -g nestjs/cli
-nest new .
+npm i -g nestjs/cli
+nest new . --package-manager pnpm
 ```
 ---
 
@@ -77,12 +77,16 @@ nest new .
 
 ---
 
-# Hexagon architecture overview
+# Hexagon Architecture Overview
 
 <div class="flex items-center h-full">
-  ![Hexagon architecture overview](./images/hexagon-overview.minimal.svg)
+
+![Hexagon architecture overview](./images/hexagon-overview.svg)
+
 </div>
 
 ---
+
+# DDD Architecture Overview
 
 
