@@ -1,20 +1,17 @@
 import { Module } from '@nestjs/common';
-import { GraphQLModule } from '@nestjs/graphql';
-import { ApolloDriver, ApolloDriverConfig } from '@nestjs/apollo';
 
 import { PingCounterAPIContainerModule } from '@container/ping-counter.api.container.module';
 import { PingCounterDomainContainerModule } from '@container/ping-counter.domain.container.module';
-import { GrpcClientDataSourceModule } from '@infra/grpc/grpc-client.data-source.module';
+
+import { GrpcClientInfraModule } from '@infra/grpc/grpc-client.infra.module';
+import { MongoInfraModule } from '@infra/mongo/mongo.infra.module';
+import { KafkaClientInfraModule } from '@infra/kafka/kafka-client.infra.module';
 
 @Module({
   imports: [
-    GraphQLModule.forRoot<ApolloDriverConfig>({
-      driver: ApolloDriver,
-      autoSchemaFile: 'schema.gql',
-      playground: false, 
-      graphiql: true,
-    }),
-    GrpcClientDataSourceModule,
+    GrpcClientInfraModule,
+    MongoInfraModule,
+    KafkaClientInfraModule,
     PingCounterAPIContainerModule,
     PingCounterDomainContainerModule,
   ],

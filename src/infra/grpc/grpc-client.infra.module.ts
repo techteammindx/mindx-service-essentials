@@ -23,5 +23,5 @@ import { PING_COUNTER_GRPC_PACKAGE_NAME, PING_COUNTER_GRPC_SERVICE_NAME } from '
     ClientsModule,
   ]
 })
-export class GrpcClientDataSourceModule {}
+export class GrpcClientInfraModule {}
 

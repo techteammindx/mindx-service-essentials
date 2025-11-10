@@ -27,7 +27,9 @@
       "@contract/*": ["src/contract/*"],
       "@infra/*": ["src/infra/*"],
       "@app/*": ["src/app/*"],
-      "@data-source/*": ["src/data-source/*"]
+      "@data-source/*": ["src/data-source/*"],
+      "@config/*": ["src/config/*"],
+      "@domain/*": ["src/domain/*"]
     }
   }
 }

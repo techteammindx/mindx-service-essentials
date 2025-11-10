@@ -11,5 +11,7 @@ export interface PingCounterDomainService {
 
 export enum PingCounterDataSourceInjectToken {
   DomainService = 'PING_COUNTER_DOMAIN_SERVICE_DATA_SOURCE',
+  Repository = 'PING_COUNTER_REPOSITORY',
+  EventPublisher = 'PING_COUNTER_EVENT_PUBLISHER'
 }
 
