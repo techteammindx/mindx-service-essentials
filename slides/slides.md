@@ -76,17 +76,39 @@ nest new . --package-manager pnpm
 </div>
 
 ---
+layout: image-left
 
-# Hexagon Architecture Overview
+image: images/hexagon-overview.svg
 
-<div class="flex items-center h-full">
-
-![Hexagon architecture overview](./images/hexagon-overview.svg)
-
-</div>
+backgroundSize: contain
 
 ---
 
-# DDD Architecture Overview
+## Hexagon Architecture Overview
 
+- **Infrastructure (Infra)**: Frameworks and Tools
+  - Ins: REST API, GraphQL, GRPC Calls, Kafka Consumers ...
+  - Outs: MongoDB, PostgresDB, GRPC Services, Kafka Producers ...
+
+- **Application (App)**: Business Logic
+
+- **Transport and Data Source**: Isolation layers between App and Infra
+  - **Transport**:  Isolation of the incoming Transport protocol (Infra Ins)
+  - **Data source**: Isolation of Data persistence or Event publishing (Infra Outs)
+
+---
+layout: image-left
+
+image: images/hexagon-with-ddd.svg
+
+backgroundSize: contain
+
+---
+
+## DDD Architecture Overview
+
+- **Goal**: Centralization of business rules
+- **Approach**:
+  1. Tie data and business rules together in domain objects, AND
+  2. Use them as the smallest units of domain transactions
 
