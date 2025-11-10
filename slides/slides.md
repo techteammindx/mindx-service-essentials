@@ -97,8 +97,22 @@ backgroundSize: contain
   - **Data source**: Isolation of Data persistence or Event publishing (Infra Outs)
 
 ---
+layout: image-left
 
-## Reference project structure
+image: images/task-1.svg
+
+backgroundSize: contain
+---
+
+## Task 1
+
+Acceptance Criteria:
+1. `get()` query and `ping()` mutation via *GraphQL*
+2. Requests are forwarded via *gRPC* Domain Service
+
+---
+
+## Task 1: Sample project structure
 
 <style scoped>
 pre code {
@@ -151,3 +165,87 @@ backgroundSize: contain
   1. Tie data and business rules together in domain objects, AND
   2. Use them as the smallest units of domain transactions
 
+---
+layout: image-left
+
+image: images/task-2.svg
+
+backgroundSize: contain
+---
+
+## Task 2
+
+Acceptance Criteria:
+1. `get()` and `ping()` methods via *gRPC*
+2. Data persistence into *MongoDB*
+3. Event publishing via *Kafka*
+
+---
+
+## Task 2: Sample project structure (1)
+
+<style scoped>
+pre code {
+  font-size: 0.7em; /* Adjust this value as needed (e.g., 70%, 14px, etc.) */
+}
+</style>
+
+```
+|-- app/                               # Application layer (use cases, orchestration)
+|   +-- ping-counter/
+|       +-- ping-counter.domain.app.ts           # Domain-facing application service
+|-- config/                            # Configuration management
+|   |-- value.ts                       # Runtime configuration values (env-based)
+|   +-- type.ts                        # Configuration type definitions
+|-- container/                         # Dependency injection (Nest modules)
+|   +-- ping-counter.domain.container.module.ts # Domain slice DI bindings
+|-- contract/                          # Shared interfaces & contracts
+|   |-- app/
+|   |   +-- ping-counter.app.contract.ts        # Application layer contracts
+|   |-- data-source/
+|   |   +-- ping-counter.data-source.contract.ts # Data source layer contracts
+|   +-- infra/
+|       |-- mongo.infra.contract.ts             # MongoDB contracts
+|       |-- kafka.infra.contract.ts             # Kafka event contracts
+|-- data-source/                       # Infrastructure adapters (repositories, publishers)
+|   +-- ping-counter/
+|       |-- ping-counter.mongo.repository.ts    # MongoDB persistence adapter
+|       |-- ping-counter.kafka.event-publisher.ts # Kafka event publisher
+```
+
+---
+
+## Task 2: Sample project structure (2)
+
+<style scoped>
+pre code {
+  font-size: 0.7em; /* Adjust this value as needed (e.g., 70%, 14px, etc.) */
+}
+</style>
+
+```
+|-- domain/                            # Domain layer (core business logic, aggregates)
+|   +-- ping-counter/
+|       |-- ping-counter.ts                     # Aggregate root
+|       |-- ping-counter.service.ts             # Domain service
+|       |-- ping-counter.repository.ts          # Repository interface
+|       |-- ping-counter.event-publisher.ts     # Event publisher interface
+|       |-- ping-counter.event.ts               # Domain event base
+|       +-- ping-counter.incremented.event.ts   # Specific domain event
+|-- infra/                             # Infrastructure bootstrappers (frameworks, clients)
+|   |-- grpc/
+|   |   |-- grpc-server.app.ts         # gRPC server setup
+|   |   +-- proto/
+|   |       +-- ping-counter.proto     # gRPC protocol definitions
+|   |-- kafka/
+|   |   +-- kafka-client.infra.module.ts # Kafka client DI module
+|   +-- mongo/
+|       |-- mongo.infra.module.ts      # MongoDB DI module
+|       +-- schema/
+|           +-- ping-counter.schema.ts # MongoDB document schema
+|-- transport/                         # Interface adapters (HTTP, gRPC, async consumers)
+|   +-- ping-counter/
+|       |-- ping-counter.graphql.transport.ts        # GraphQL resolver
+|       |-- ping-counter.graphql.schema.transport.ts # GraphQL schema types
+|       +-- ping-counter.grpc.transport.ts           # gRPC controller
+```
