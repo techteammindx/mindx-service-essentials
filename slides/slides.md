@@ -249,3 +249,20 @@ pre code {
 |       |-- ping-counter.graphql.schema.transport.ts # GraphQL schema types
 |       +-- ping-counter.grpc.transport.ts           # gRPC controller
 ```
+
+---
+layout: image-left
+
+image: images/task-3.svg
+
+backgroundSize: contain
+---
+
+## Task 3
+
+Acceptance Criteria:
+1. `incremented` event consumed from Kafka
+2. PingCounter `value` recorded by *seconds* 
+3. `value` series queried by time frame: *Last5Minute*, *Last1Hour* 
+
+
