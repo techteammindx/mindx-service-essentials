@@ -97,6 +97,45 @@ backgroundSize: contain
   - **Data source**: Isolation of Data persistence or Event publishing (Infra Outs)
 
 ---
+
+## Reference project structure
+
+<style scoped>
+pre code {
+  font-size: 0.7em; /* Adjust this value as needed (e.g., 70%, 14px, etc.) */
+}
+</style>
+
+```
+|-- app/                                          # Application layer (use cases, orchestration)
+|   +-- ping-counter/
+|       |-- ping-counter.api.app.ts               # API Layer application service
+|-- container/                                    # NestJS Composition Modules
+|   |-- ping-counter.api.container.module.ts      # PingCounter API Layer DI bindings
+|-- contract/                                     # NestJS Dependency Injection Contracts
+|   |-- app/
+|   |   +-- ping-counter.app.contract.ts          # Application layer contracts
+|   |-- data-source/
+|   |   +-- ping-counter.data-source.contract.ts  # Data source layer contracts
+|   +-- infra/
+|       |-- ping-counter.grpc.infra.contract.ts   # gRPC service contracts
+|-- data-source/                                  # Infrastructure output adapters (repositories, publishers, domain services)
+|   +-- ping-counter/
+|       +-- ping-counter.grpc.domain-service.ts   # gRPC domain service
+|-- infra/                                        # Infrastructure (frameworks, clients)
+|   |-- graphql/
+|   |   +-- graphql-server.app.ts                 # GraphQL server 
+|   |-- grpc/
+|       |-- grpc-client.infra.module.ts           # gRPC client module
+|       +-- proto/
+|           +-- ping-counter.proto                # gRPC protocol definitions
+|-- transport/                                    # Interface adapters (HTTP, gRPC, async consumers)
+|   +-- ping-counter/
+|       |-- ping-counter.graphql.transport.ts        # GraphQL resolver
+|       |-- ping-counter.graphql.schema.transport.ts # GraphQL schema types
+```
+
+---
 layout: image-left
 
 image: images/hexagon-with-ddd.svg
