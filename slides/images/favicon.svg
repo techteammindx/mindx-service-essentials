@@ -1,0 +1,10 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100">
+  <!-- Outer hexagon (bold, prominent) -->
+  <polygon points="50,5 85,30 85,70 50,95 15,70 15,30" fill="none" stroke="#3b82f6" stroke-width="4" stroke-linejoin="round"/>
+
+  <!-- Inner filled hexagon (domain core) -->
+  <polygon points="50,25 75,37.5 75,62.5 50,75 25,62.5 25,37.5" fill="#3b82f6" opacity="0.25"/>
+
+  <!-- Center circle (domain) -->
+  <circle cx="50" cy="50" r="8" fill="#3b82f6"/>
+</svg>

@@ -3,6 +3,7 @@ theme: default
 title: Service Essentials Workshop
 info: |
   ## Slides for Service Essentials Training
+favicon: images/favicon.svg
 mdc: true
 ---
 
