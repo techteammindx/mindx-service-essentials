@@ -265,4 +265,11 @@ Acceptance Criteria:
 2. PingCounter `value` recorded by *seconds* 
 3. `value` series queried by time frame: *Last5Minute*, *Last1Hour* 
 
+---
+
+## Bonus tasks
+
+1. Dealing with racing conditions in `ping` functions / methods
+2. Change infra combination to `REST` + `Postgres` + `RabbitMQ`
+3. Deploy all to `docker` or `K8s`
 
